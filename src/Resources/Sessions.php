@@ -49,5 +49,36 @@ class Sessions extends \DalPraS\OAuth2\Client\Resources\AuthenticatedResourceAbs
         return $this->provider->getParsedResponse($request);
     }
 
+		
+		 /**
+     * Retrieves attendance details for a specific webinar session that has ended. If attendees attended the session ('registrantsAttended'), specific attendance details, such as attendenceTime for a registrant, will also be retrieved.
+     * https://api.getgo.com/G2W/rest/v2/organizers/{organizerKey}/webinars/{webinarKey}/sessions/{sessionKey}
+     *
+     * @param int $webinarKey
+		 * @param int $webinarSession
+     * @return array
+     *[
+		 *  [
+		 *    "registrantKey": 0,
+		 *    "firstName": "string",
+		 *    "lastName": "string",
+		 *    "email": "string",
+		 *    "attendanceTimeInSeconds": 0,
+		 *    "sessionKey": 0,
+		 *    "attendance": [
+		 *      [
+		 *        "joinTime": "2020-06-17T11:01:44.684Z",
+		 *        "leaveTime": "2020-06-17T11:01:44.684Z"
+		 *      ]
+		 *    ]
+		 *  ]
+		 *]
+     */
+    public function getWebinarSessionsAttendees($webinarKey, $webinarSession):array {
+        $url = $this->provider->domain . '/G2W/rest/v2/organizers/' . (new AccessTokenDecorator($this->accessToken))->getOrganizerKey() . '/webinars/' . $webinarKey . '/sessions/' . $webinarSession;
+				$request  = $this->provider->getAuthenticatedRequest('GET', $url, $this->accessToken);
+        return $this->provider->getParsedResponse($request);
+    }
+
 
 }
